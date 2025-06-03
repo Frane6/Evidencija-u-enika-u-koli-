@@ -1,4 +1,5 @@
-﻿#pragma once
+#ifndef HEADER_H
+#define HEADER_H
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -7,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_ID 32
 #define MAX_IME 32      // 9. Makro konstanta
 #define MAX_PREZIME 32  // 9. Makro konstanta
 #define MAX_GRAD 32     // 9. Makro konstanta
@@ -20,7 +22,7 @@ typedef enum {
 
 // 3. Slozeni tipovi, 4. typedef, 16. Dinamicka memorija (povezani popis)
 typedef struct ucenik {
-    int id;                      // 2. int
+    char id[MAX_ID];                     
     char ime[MAX_IME];           // 2. char[], 15. Staticki zauzeto polje
     char prezime[MAX_PREZIME];   // 2. char[], 15. Staticki zauzeto polje
     char grad[MAX_GRAD];         // 2. char[], 15. Staticki zauzeto polje
@@ -43,3 +45,5 @@ void ucitajUcenike(Ucenik** glava, const char* filename);
 void oslobodiMemoriju(Ucenik** glava);
 const char* spolToString(Spol spol);
 void sortirajPrezimeQsort(const Ucenik* glava); // 23, 25, 26
+
+#endif
