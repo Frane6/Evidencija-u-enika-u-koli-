@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include "header.h"
 
 int ukupnoUcenika = 0; // 8. Definicija globalne varijable
@@ -19,17 +19,25 @@ void dodajUcenika(Ucenik** glava) {
         perror("Greska pri alokaciji memorije");    // 22. perror()
         return;
     }
-    printf("Unesi ID ucenika: ");
-    scanf("%d", &novi->id);
+    printf("Unsi ID ucenika: ");
+    scanf("%31s", &novi->id);
     printf("Unesi ime: ");
-    scanf("%31s", novi->ime);
+    getchar();
+    fgets(novi->ime, sizeof(novi->ime), stdin);
+    novi->ime[strcspn(novi->ime, "\n")] = '\0';
+    //scanf("%31s", novi->ime);
     printf("Unesi prezime: ");
-    scanf("%31s", novi->prezime);
+    getchar();
+    fgets(novi->prezime, sizeof(novi->prezime), stdin);
+    novi->prezime[strcspn(novi->prezime, "\n")] = '\0';
+    //scanf("%31s", novi->prezime);
     printf("Unesi grad: ");
-    scanf("%31s", novi->grad);
+    getchar();
+    fgets(novi->grad, sizeof(novi->grad), stdin);
+    novi->grad[strcspn(novi->grad, "\n")] = '\0';
     printf("Unesi prosjek ocjena: ");
     scanf("%f", &novi->prosjek);
-    printf("Unesi razred (1-8): ");
+    printf("Unesi razred: ");
     scanf("%d", &novi->razred);
     printf("Spol (0-Musko, 1-Zensko, 2-Neodredjeno): ");
     int s; scanf("%d", &s);
@@ -51,7 +59,7 @@ void ispisiUcenike(const Ucenik* glava) {
     const Ucenik* u = glava;
     while (u) {
         if (u->aktivan)
-            printf("ID: %d | %s %s | Grad: %s | Prosjek: %.2f | Razred: %d | Spol: %s\n",
+            printf("ID: %s | %s %s | Grad: %s | Prosjek: %.2f | Razred: %d | Spol: %s\n",
                 u->id, u->ime, u->prezime, u->grad, u->prosjek, u->razred, spolToString(u->spol));
         u = u->next;
     }
@@ -61,7 +69,7 @@ void ispisiUcenike(const Ucenik* glava) {
 void azurirajUcenika(Ucenik* glava) {
     int id;
     printf("Unesi ID ucenika za izmjenu: ");
-    scanf("%d", &id);
+    scanf("%s", &id);
     for (Ucenik* u = glava; u; u = u->next) {
         if (u->id == id && u->aktivan) {
             printf("Novo ime: "); scanf("%31s", u->ime);
@@ -83,7 +91,7 @@ void azurirajUcenika(Ucenik* glava) {
 void deaktivirajUcenika(Ucenik* glava) {
     int id;
     printf("Unesi ID ucenika za deaktivaciju: ");
-    scanf("%d", &id);
+    scanf("%s", &id);
     for (Ucenik* u = glava; u; u = u->next) {
         if (u->id == id && u->aktivan) {
             u->aktivan = 0;
