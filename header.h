@@ -1,49 +1,45 @@
 #ifndef HEADER_H
 #define HEADER_H
 
-#define _CRT_SECURE_NO_WARNINGS
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
-#define MAX_ID 32
-#define MAX_IME 32      // 9. Makro konstanta
-#define MAX_PREZIME 32  // 9. Makro konstanta
-#define MAX_GRAD 32     // 9. Makro konstanta
+#define MAX_NAME_LEN 50
+#define MAX_CITY_LEN 50
+#define FILE_NAME "students.dat"
 
-// 4. typedef, enum za spol ucenika
 typedef enum {
-    MUSKO,
-    ZENSKO,
-    NEODREDJENO
-} Spol;
+    MALE = 0,
+    FEMALE,
+    OTHER
+} Gender;
 
-// 3. Slozeni tipovi, 4. typedef, 16. Dinamicka memorija (povezani popis)
-typedef struct ucenik {
-    char id[MAX_ID];                     
-    char ime[MAX_IME];           // 2. char[], 15. Staticki zauzeto polje
-    char prezime[MAX_PREZIME];   // 2. char[], 15. Staticki zauzeto polje
-    char grad[MAX_GRAD];         // 2. char[], 15. Staticki zauzeto polje
-    float prosjek;               // 2. float
-    int razred;                  // 2. int
-    Spol spol;                   // 4. enum
-    int aktivan;                 // 2. int (1=aktivan, 0=neaktivan)
-    struct ucenik* next;         // 12. Pokazivac, 16. Dinamicka memorija
-} Ucenik;                        // 3. Slozeni tip, 4. typedef
+typedef struct {
+    int studentId;
+    char firstName[MAX_NAME_LEN];
+    char lastName[MAX_NAME_LEN];
+    char city[MAX_CITY_LEN];
+    float averageGrade;
+    int currentYear;
+    Gender gender;
+    int isActive;
+} Student;
 
-// 8. extern globalna varijabla
-extern int ukupnoUcenika;
+// Global counter
+extern int totalStudents;
 
-void dodajUcenika(Ucenik** glava);
-void ispisiUcenike(const Ucenik* glava);
-void azurirajUcenika(Ucenik* glava);
-void deaktivirajUcenika(Ucenik* glava); // umjesto brisanja
-void spremiUcenike(const Ucenik* glava, const char* filename);
-void ucitajUcenike(Ucenik** glava, const char* filename);
-void oslobodiMemoriju(Ucenik** glava);
-const char* spolToString(Spol spol);
-void sortirajPrezimeQsort(const Ucenik* glava); // 23, 25, 26
+// Funkcijske deklaracije
+void showMenu(void);
+void createStudent(Student** students, int* size);
+void readStudents(const Student* students, int size);
+void updateStudent(Student* students, int size);
+void deleteStudent(Student* students, int size);
+void saveToFile(const Student* students, int size);
+void loadFromFile(Student** students, int* size);
+void sortStudents(Student* students, int size);
+Student* searchStudent(Student* students, int size, int id);
+void freeMemory(Student** students);
 
 #endif
