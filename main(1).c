@@ -1,58 +1,78 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "header.h"
 
+int totalStudents = 0;
+
 typedef enum {
-    NOVI_UNOS = 1,
-    PRIKAZ,
-    IZMJENA,
-    DEAKTIVIRAJ,
-    SPREMI,
-    UCITAJ,
-    SORTIRAJ_PREZIME,
-    OBRISI_DATOTEKU,
-    IZLAZ
-} IzbornikOpcije;
+    MENU_CREATE = 1,
+    MENU_READ,
+    MENU_UPDATE,
+    MENU_DELETE,
+    MENU_SAVE,
+    MENU_LOAD,
+    MENU_SORT,
+    MENU_SEARCH,
+    MENU_EXIT
+} MenuOption;
 
 int main(void) {
-    Ucenik* glava = NULL;
-    int odabir = 0;
-    const char* filename = "ucenici.bin";
-    do {
-        printf("\n=== SKOLSKA EVIDENCIJA ===\n");
-        printf("1 - Novi unos\n");
-        printf("2 - Prikaz svih aktivnih ucenika\n");
-        printf("3 - Izmjena podataka ucenika\n");
-        printf("4 - Deaktiviraj ucenika\n");
-        printf("5 - Spremi u datoteku\n");
-        printf("6 - Ucitaj iz datoteke\n");
-        printf("7 - Sortiraj po prezimenu (qsort)\n");
-        printf("8 - Obrisi datoteku\n");
-        printf("9 - Izlaz\n");
-        printf("Odaberi opciju: ");
-        scanf("%d", &odabir);
+    Student* students = NULL;
+    int choice;
 
-        switch (odabir) {
-        case NOVI_UNOS: dodajUcenika(&glava); break;
-        case PRIKAZ: ispisiUcenike(glava); break;
-        case IZMJENA: azurirajUcenika(glava); break;
-        case DEAKTIVIRAJ: deaktivirajUcenika(glava); break;
-        case SPREMI: spremiUcenike(glava, filename); break;
-        case UCITAJ: ucitajUcenike(&glava, filename); break;
-        case SORTIRAJ_PREZIME: sortirajPrezimeQsort(glava); break;
-        case OBRISI_DATOTEKU:
-            if (remove(filename) == 0)
-                printf("Datoteka obrisana.\n");
-            else
-                perror("Greska pri brisanju datoteke.");
+    do {
+        showMenu();
+        if (scanf("%d", &choice) != 1) {
+            fprintf(stderr, "Invalid input.\n");
+            while (getchar() != '\n');
+            continue;
+        }
+
+        switch (choice) {
+        case MENU_CREATE:
+            createStudent(&students, &totalStudents);
             break;
-        case IZLAZ:
-            oslobodiMemoriju(&glava);
-            printf("Kraj programa.\n");
+        case MENU_READ:
+            readStudents(students, totalStudents);
+            break;
+        case MENU_UPDATE:
+            updateStudent(students, totalStudents);
+            break;
+        case MENU_DELETE:
+            deleteStudent(students, totalStudents);
+            break;
+        case MENU_SAVE:
+            saveToFile(students, totalStudents);
+            break;
+        case MENU_LOAD:
+            loadFromFile(&students, &totalStudents);
+            break;
+        case MENU_SORT:
+            sortStudents(students, totalStudents);
+            break;
+        case MENU_SEARCH: {
+            int id;
+            printf("Enter ID to search: ");
+            if (scanf("%d", &id) != 1) break;
+            Student* s = searchStudent(students, totalStudents, id);
+            if (s && s->isActive) {
+                printf("%d | %s %s | %s | %.2f | Year %d | %s\n",
+                    s->studentId, s->firstName, s->lastName, s->city,
+                    s->averageGrade, s->currentYear,
+                    s->gender == MALE ? "Male" : s->gender == FEMALE ? "Female" : "Other");
+            }
+            else {
+                printf("Student not found.\n");
+            }
+            break;
+        }
+        case MENU_EXIT:
             break;
         default:
-            printf("Nepostojeca opcija!\n");
+            printf("Invalid choice.\n");
         }
-    } while (odabir != IZLAZ);
 
+    } while (choice != MENU_EXIT);
+
+    freeMemory(&students);
     return 0;
 }
