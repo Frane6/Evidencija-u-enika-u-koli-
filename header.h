@@ -1,43 +1,52 @@
-#ifndef HEADER_H
-#define HEADER_H
+#ifndef Header_H
+#define Header_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
 
-#define MAKS_IME 50
-#define MAKS_GRAD 50
-#define NAZIV_DATOTEKE "studenti.dat"
-
-typedef enum {
-    MUSKO = 0,
-    ZENSKO,
-    OSTALO
-} Spol;
+#define MaksIme 50
+#define MaksGrad 50
+#define NazivDatoteke "studenti.dat"
+// 11
+typedef enum { Musko = 0, Zensko, Ostalo } Spol;    //4 
 
 typedef struct {
-    int idStudenta;
-    char ime[MAKS_IME];
-    char prezime[MAKS_IME];
-    char grad[MAKS_GRAD];
-    float prosjekOcjena;
-    int godina;
-    Spol spol;
-    int aktivan;
+    int IdStudenta;            //3
+    char Ime[MaksIme];
+    char Prezime[MaksIme];      // Statički zauzeto polje
+    char Grad[MaksGrad];
+    float ProsjekOcjena;
+    int Godina;
+    Spol Spol;
+    int Aktivan;
 } Student;
 
-extern int brojStudenata;
+extern int BrojStudenata;     //8
 
-void prikaziIzbornik(void);
-void unesiStudenta(Student **studenti, int *broj);
-void prikaziStudente(const Student *studenti, int broj);
-void azurirajStudenta(Student *studenti, int broj);
-void obrisiStudenta(Student *studenti, int broj);
-void spremiUDatoteku(const Student *studenti, int broj);
-void ucitajIzDatoteke(Student **studenti, int *broj);
-void sortirajStudente(Student *studenti, int broj);
-Student* pretraziStudenta(Student *studenti, int broj, int id);
-void oslobodiMemoriju(Student **studenti);
+// CRUD
+void PrikaziIzbornik(void);
+void UnesiStudenta(Student** Studenti, int* Broj);
+void PrikaziStudente(const Student* Studenti, int Broj);
+void AzurirajStudenta(Student* Studenti, int Broj);
+void ObrisiStudenta(Student* Studenti, int Broj);
+
+// Datoteka
+void SpremiUDatoteku(const Student* Studenti, int Broj);
+void UcitajIzDatoteke(Student** Studenti, int* Broj);
+  
+void PreimenujDatoteku(const char* Stara, const char* Nova);
+
+// Sortiranje / Pretraga
+void SortirajStudente(Student* Studenti, int Broj);
+Student* PretraziStudenta(Student* Studenti, int Broj, int Id);
+
+// Memorija
+void OslobodiMemoriju(Student** Studenti);
+
+// QuickSort
+void QuickSort(Student* Studenti, int Low, int High);
+int Partition(Student* Studenti, int Low, int High);
+void Swap(Student* a, Student* b);
 
 #endif
