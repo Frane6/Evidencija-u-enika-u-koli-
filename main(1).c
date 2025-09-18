@@ -1,77 +1,38 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include "header.h"
-
-int brojStudenata = 0;
-
-typedef enum {
-    IZBORNIK_UNOS = 1,
-    IZBORNIK_PRIKAZ,
-    IZBORNIK_AZURIRANJE,
-    IZBORNIK_BRISANJE,
-    IZBORNIK_SPREMANJE,
-    IZBORNIK_UCITAVANJE,
-    IZBORNIK_SORTIRANJE,
-    IZBORNIK_PRETRAGA,
-    IZBORNIK_IZLAZ
-} Izbor;
+#include "Header.h"
 
 int main(void) {
-    Student *studenti = NULL;
-    int izbor;
+    Student* Studenti = NULL;
+    int Izbor;                    //5
 
     do {
-        prikaziIzbornik();
-        if (scanf("%d", &izbor) != 1) {
-            fprintf(stderr, "Neispravan unos.\n");
-            while (getchar() != '\n');
-            continue;
+        PrikaziIzbornik();
+        if (scanf("%d", &Izbor) != 1) { while (getchar() != '\n'); continue; }
+        switch (Izbor) {
+        case 1: UnesiStudenta(&Studenti, &BrojStudenata); break;
+        case 2: PrikaziStudente(Studenti, BrojStudenata); break;
+        case 3: AzurirajStudenta(Studenti, BrojStudenata); break;
+        case 4: ObrisiStudenta(Studenti, BrojStudenata); break;
+        case 5: SpremiUDatoteku(Studenti, BrojStudenata); break;
+        case 6: UcitajIzDatoteke(&Studenti, &BrojStudenata); break;
+        case 7: SortirajStudente(Studenti, BrojStudenata); break;
+        case 12: {
+            PreimenujDatoteku("stari.dat", "novi.dat");
+            break;
         }
-
-        switch (izbor) {
-            case IZBORNIK_UNOS:
-                unesiStudenta(&studenti, &brojStudenata);
-                break;
-            case IZBORNIK_PRIKAZ:
-                prikaziStudente(studenti, brojStudenata);
-                break;
-            case IZBORNIK_AZURIRANJE:
-                azurirajStudenta(studenti, brojStudenata);
-                break;
-            case IZBORNIK_BRISANJE:
-                obrisiStudenta(studenti, brojStudenata);
-                break;
-            case IZBORNIK_SPREMANJE:
-                spremiUDatoteku(studenti, brojStudenata);
-                break;
-            case IZBORNIK_UCITAVANJE:
-                ucitajIzDatoteke(&studenti, &brojStudenata);
-                break;
-            case IZBORNIK_SORTIRANJE:
-                sortirajStudente(studenti, brojStudenata);
-                break;
-            case IZBORNIK_PRETRAGA: {
-                int id;
-                printf("Unesite ID studenta za pretragu: ");
-                if (scanf("%d", &id) != 1) break;
-                Student *s = pretraziStudenta(studenti, brojStudenata, id);
-                if (s && s->aktivan) {
-                    printf("%d | %s %s | %s | %.2f | Godina %d | %s\n",
-                           s->idStudenta, s->ime, s->prezime, s->grad,
-                           s->prosjekOcjena, s->godina,
-                           s->spol == MUSKO ? "Muško" : s->spol == ZENSKO ? "Žensko" : "Ostalo");
-                } else {
-                    printf("Student nije pronađen.\n");
-                }
-                break;
-            }
-            case IZBORNIK_IZLAZ:
-                break;
-            default:
-                printf("Neispravan izbor.\n");
+        case 8: {
+            int Id; printf("Unesite ID: "); if (scanf("%d", &Id) != 1) break;
+            Student* S = PretraziStudenta(Studenti, BrojStudenata, Id);
+            if (S && S->Aktivan) printf("%d | %s %s\n", S->IdStudenta, S->Ime, S->Prezime);
+            else printf("Student nije pronađen.\n");
+            break;
         }
+        case 9: break;
+        
+        default: printf("Neispravan izbor.\n");
+        }
+    } while (Izbor != 9);
 
-    } while (izbor != IZBORNIK_IZLAZ);
-
-    oslobodiMemoriju(&studenti);
+    OslobodiMemoriju(&Studenti);
     return 0;
 }
