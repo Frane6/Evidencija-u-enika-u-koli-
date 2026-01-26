@@ -1,52 +1,62 @@
-#ifndef Header_H
-#define Header_H
+#ifndef HEADER_H
+#define HEADER_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #define MaksIme 50
 #define MaksGrad 50
 #define NazivDatoteke "studenti.dat"
-// 11
-typedef enum { Musko = 0, Zensko, Ostalo } Spol;    //4 
 
+// Tip podataka za spol studenta
+typedef enum {
+    Musko = 0,
+    Zensko,
+    Ostalo
+} Spol;
+
+// Struktura za studenta
 typedef struct {
-    int IdStudenta;            //3
+    int IdStudenta;
     char Ime[MaksIme];
-    char Prezime[MaksIme];      // Statički zauzeto polje
+    char Prezime[MaksIme];
     char Grad[MaksGrad];
     float ProsjekOcjena;
     int Godina;
     Spol Spol;
-    int Aktivan;
+    int Aktivan;  // 1 - aktivan, 0 - obrisan
 } Student;
 
-extern int BrojStudenata;     //8
+// Globalna varijabla za broj studenata
+extern int BrojStudenata;
 
-// CRUD
+// Funkcije za izbornik
 void PrikaziIzbornik(void);
+
+// Funkcije za CRUD
 void UnesiStudenta(Student** Studenti, int* Broj);
 void PrikaziStudente(const Student* Studenti, int Broj);
 void AzurirajStudenta(Student* Studenti, int Broj);
 void ObrisiStudenta(Student* Studenti, int Broj);
 
-// Datoteka
+// Funkcije za rad s datotekama
 void SpremiUDatoteku(const Student* Studenti, int Broj);
 void UcitajIzDatoteke(Student** Studenti, int* Broj);
-  
 void PreimenujDatoteku(const char* Stara, const char* Nova);
+void ObrisiDatoteku(const char* Naziv);
+void KopirajDatoteku(const char* Izvor, const char* Odrediste);
 
-// Sortiranje / Pretraga
+// Funkcija za sortiranje
 void SortirajStudente(Student* Studenti, int Broj);
-Student* PretraziStudenta(Student* Studenti, int Broj, int Id);
-
-// Memorija
-void OslobodiMemoriju(Student** Studenti);
-
-// QuickSort
 void QuickSort(Student* Studenti, int Low, int High);
 int Partition(Student* Studenti, int Low, int High);
-void Swap(Student* a, Student* b);
+
+// Funkcija za pretraživanje
+Student* PretraziStudenta(Student* Studenti, int Broj, int Id);
+
+// Funkcija za oslobađanje memorije
+void OslobodiMemoriju(Student** Studenti);
 
 #endif
